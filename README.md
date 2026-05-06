@@ -24,51 +24,64 @@ All wallets call `mintPublic()` on the SeaDrop contract at the same time. The fa
 ## Engine Flow
 
 ```
-┌─────────────────────────────┐
-│  Every 500ms, engine wakes  │
-│  and scans all queued drops │
-└──────────────┬──────────────┘
-               ▼
-┌─────────────────────────────┐
-│  For each queued drop:      │
-│  • Check if mintTime known  │
-│  • If not, call discover()  │
-│  • Calculate: timeUntilDrop │
-└──────────────┬──────────────┘
-               ▼
-        ┌──────────────┐
-        │ timeUntilDrop │
-        │  > 500ms ?    │
-        └──────┬───────┘
-               │
-      ┌────────┴────────┐
-      ▼                 ▼
-  Still far          Within 500ms
-  (do nothing)       Log "approaching T-0"
-                          │
-                          ▼
-                  ┌──────────────┐
-                  │ timeUntilDrop│
-                  │ <= 0 ?       │
-                  └──────┬───────┘
-                         │
-                    ┌────┴────┐
-                    ▼         ▼
-               Not yet    YES → FIRE!
-               (wait)         │
-                                ▼
-                    ┌─────────────────────────────┐
-                    │  _fireDrop() sequence:      │
-                    │  1. Status → monitoring     │
-                    │  2. Re-discover on-chain    │
-                    │     (catches last-minute    │
-                    │      config changes)        │
-                    │  3. Pre-flight balance check│
-                    │  4. All wallets fire at     │
-                    │     the same time           │
-                    │  5. Status → fired          │
-                    └─────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                        ENGINE START                              │
+│                   node cli.js start                              │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  MONITORING LOOP  (every 500ms)                                  │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │ 1. Scan all queued drops in drops.json                  │    │
+│  │ 2. For each drop:                                       │    │
+│  │    • If mintTime unknown → call discover() on-chain     │    │
+│  │    • Calculate timeUntilDrop = mintTime - now           │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└──────────────────────────────┬──────────────────────────────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              ▼                ▼                ▼
+       ┌──────────┐    ┌──────────┐     ┌──────────┐
+       │ > 500ms  │    │ 0-500ms  │     │  <= 0    │
+       │  (far)   │    │ (near)   │     │ (T-0)    │
+       └────┬─────┘    └────┬─────┘     └────┬─────┘
+            │               │                │
+            ▼               ▼                ▼
+       ┌──────────┐   ┌──────────┐    ┌──────────────────────────┐
+       │ WAIT     │   │  LOG     │    │      _fireDrop()         │
+       │          │   │"approach-│    │                          │
+       │ Do       │   │ ing T-0" │    │  ┌────────────────────┐  │
+       │ nothing  │   │          │    │  │ 1. Status →        │  │
+       │          │   │ Prepare  │    │  │    monitoring      │  │
+       │ Next     │   │ gas      │    │  ├────────────────────┤  │
+       │ tick...  │   │ params   │    │  │ 2. Re-discover     │  │
+       └──────────┘   └──────────┘    │  │    on-chain        │  │
+                                       │  │    (last-minute    │  │
+                                       │  │     changes)       │  │
+                                       │  ├────────────────────┤  │
+                                       │  │ 3. Pre-flight      │  │
+                                       │  │    balance check   │  │
+                                       │  ├────────────────────┤  │
+                                       │  │ 4. ALL WALLETS     │  │
+                                       │  │    FIRE SIMULTANEOUS│  │
+                                       │  │    (Promise.all)   │  │
+                                       │  ├────────────────────┤  │
+                                       │  │ 5. Status → fired  │  │
+                                       │  │    Save results    │  │
+                                       │  └────────────────────┘  │
+                                       └──────────────────────────┘
+                                                               │
+                                                               ▼
+                                               ┌───────────────────────┐
+                                               │   LOG & REPORT        │
+                                               │  • successful: N      │
+                                               │  • reverted:  N       │
+                                               │  • failed:    N       │
+                                               └───────────────────────┘
 ```
+
+**Status Lifecycle:** `queued` → `monitoring` → `fired` | `failed` | `expired`
 
 ## Quick Start
 
