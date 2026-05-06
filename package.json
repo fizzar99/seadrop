@@ -1,0 +1,20 @@
+{
+  "name": "opensea-fcfs-mint-engine",
+  "version": "1.0.0",
+  "description": "First-come-first-served NFT minting engine — queue a drop and all wallets fire simultaneously at T-0",
+  "main": "engine.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node engine.js",
+    "daemon": "node daemon.js",
+    "add-drop": "node cli.js add",
+    "list-drops": "node cli.js list",
+    "remove-drop": "node cli.js remove"
+  },
+  "keywords": ["nft", "mint", "opensea", "fcfs", "automation", "ethereum"],
+  "dependencies": {
+    "ethers": "^6.12.1",
+    "dotenv": "^16.4.5",
+    "axios": "^1.7.2"
+  }
+}
