@@ -14,8 +14,8 @@
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Your       │────▶│  SeaDrop     │────▶│  NFT        │────▶│  You own    │
-│  Wallets    │     │  Contract    │     │  Contract   │     │  the NFTs   │
+│  Your          │───▶│  SeaDrop       │───▶│  NFT           │───▶│  You own      │
+│  Wallets       │     │  Contract      │     │  Contract      │     │  the NFTs     │
 └─────────────┘     └──────────────┘     └─────────────┘     └─────────────┘
 ```
 
