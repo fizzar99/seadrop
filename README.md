@@ -21,6 +21,55 @@
 
 All wallets call `mintPublic()` on the SeaDrop contract at the same time. The fastest transaction wins the block.
 
+## Engine Flow
+
+```
+┌─────────────────────────────┐
+│  Every 500ms, engine wakes  │
+│  and scans all queued drops │
+└──────────────┬──────────────┘
+               ▼
+┌─────────────────────────────┐
+│  For each queued drop:      │
+│  • Check if mintTime known  │
+│  • If not, call discover()  │
+│  • Calculate: timeUntilDrop │
+└──────────────┬──────────────┘
+               ▼
+        ┌──────────────┐
+        │ timeUntilDrop │
+        │  > 500ms ?    │
+        └──────┬───────┘
+               │
+      ┌────────┴────────┐
+      ▼                 ▼
+  Still far          Within 500ms
+  (do nothing)       Log "approaching T-0"
+                          │
+                          ▼
+                  ┌──────────────┐
+                  │ timeUntilDrop│
+                  │ <= 0 ?       │
+                  └──────┬───────┘
+                         │
+                    ┌────┴────┐
+                    ▼         ▼
+               Not yet    YES → FIRE!
+               (wait)         │
+                                ▼
+                    ┌─────────────────────────────┐
+                    │  _fireDrop() sequence:      │
+                    │  1. Status → monitoring     │
+                    │  2. Re-discover on-chain    │
+                    │     (catches last-minute    │
+                    │      config changes)        │
+                    │  3. Pre-flight balance check│
+                    │  4. All wallets fire at     │
+                    │     the same time           │
+                    │  5. Status → fired          │
+                    └─────────────────────────────┘
+```
+
 ## Quick Start
 
 ### 1. Clone & Install
