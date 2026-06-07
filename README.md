@@ -1,6 +1,6 @@
 # SeaDrop Mint Engine
 
-> NFT minting engine for Opensea-enabled collections on EVM. Queue a drop, and all your wallets fire simultaneously at T-0.
+> NFT minting engine for "OpenSea: SeaDrop" enabled collections on EVM Chains. Queue a drop, and all your wallets fire simultaneously at T-0.
 
 ## Features
 
