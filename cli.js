@@ -2,7 +2,7 @@
 /**
  * cli.js — Command-line interface for the OpenSea FCFS Mint Engine
  */
-require('dotenv').config();
+const { loadPrivateKeys } = require('./load-keys');
 const MintEngine = require('./engine');
 
 const config = {
@@ -17,7 +17,7 @@ const config = {
 };
 
 if (!config.rpcUrl || config.privateKeys.length === 0) {
-  console.error('❌ Missing RPC_URL or PRIVATE_KEYS in .env');
+  console.error('❌ Missing RPC_URL or pk.txt');
   console.error('');
   console.error('Create a .env file:');
   console.error('  cp .env.example .env');

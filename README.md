@@ -85,18 +85,21 @@ npm install
 
 ```bash
 cp .env.example .env
-nano .env
 ```
 
-Fill in your values:
+Create `pk.txt` in the project root (one private key per line):
+
+```txt
+0xabc123...
+0xdef456...
+0x789xyz...
+```
+
+Fill in `.env` (PRIVATE_KEYS is no longer used):
 
 ```env
 # ── RPC ──
 RPC_URL=https://mainnet.base.org
-
-# ── Wallets ──
-# Comma-separated private keys with 0x prefix
-PRIVATE_KEYS=0xabc123...,0xdef456...
 
 # ── Gas Warfare ──
 GAS_MULTIPLIER=1.5

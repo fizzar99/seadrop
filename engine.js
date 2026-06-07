@@ -204,7 +204,7 @@ class MintEngine {
 
 // ── CLI / Direct execution ───────────────────────────────────────
 if (require.main === module) {
-  require('dotenv').config();
+  const { loadPrivateKeys } = require('./load-keys');
 
   const config = {
     rpcUrl: process.env.RPC_URL,
@@ -218,7 +218,7 @@ if (require.main === module) {
   };
 
   if (!config.rpcUrl || config.privateKeys.length === 0) {
-    console.error('Missing RPC_URL or PRIVATE_KEYS in .env');
+    console.error('Missing RPC_URL or pk.txt');
     process.exit(1);
   }
 
