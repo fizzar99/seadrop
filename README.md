@@ -1,6 +1,6 @@
-# SeaDrop Public Mint Engine (opensea-public-mint-engine)
+# SeaDrop Mint Engine
 
-> First-come-first-served NFT minting engine for SeaDrop-enabled collections on Base and Ethereum mainnet. Queue a drop, and all your wallets fire simultaneously at T-0.
+> NFT minting engine for Opensea-enabled collections on EVM. Queue a drop, and all your wallets fire simultaneously at T-0.
 
 ## Features
 
