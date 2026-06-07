@@ -1,7 +1,7 @@
 {
-  "name": "opensea-public-mint-engine",
+  "name": "seadrop-mint-engine",
   "version": "1.0.0",
-  "description": "SeaDrop Public Mint Engine — First-come-first-served NFT minting engine for SeaDrop collections",
+  "description": "SeaDrop Mint Engine — First-come-first-served and public NFT minting engine for Opensea NFT collections",
   "main": "engine.js",
   "type": "commonjs",
   "scripts": {
