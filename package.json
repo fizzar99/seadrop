@@ -1,7 +1,7 @@
 {
-  "name": "opensea-fcfs-mint-engine",
+  "name": "opensea-public-mint-engine",
   "version": "1.0.0",
-  "description": "First-come-first-served NFT minting engine — queue a drop and all wallets fire simultaneously at T-0",
+  "description": "SeaDrop Public Mint Engine — First-come-first-served NFT minting engine for SeaDrop collections",
   "main": "engine.js",
   "type": "commonjs",
   "scripts": {

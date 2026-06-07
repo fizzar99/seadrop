@@ -1,4 +1,4 @@
-# SeaDrop FCFS Mint Engine
+# SeaDrop Public Mint Engine (opensea-public-mint-engine)
 
 > First-come-first-served NFT minting engine for SeaDrop-enabled collections on Base and Ethereum mainnet. Queue a drop, and all your wallets fire simultaneously at T-0.
 
